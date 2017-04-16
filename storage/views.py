@@ -4,7 +4,7 @@ from rest_framework import viewsets, views
 from rest_framework.response import Response
 from storage.models import Folder, File
 from storage.serializers import FolderSerializer, FileSerializer
-from rest_framework import authentication, permissions, parsers, status
+from rest_framework import authentication, permissions, parsers, status, filters
 import mimetypes
 
 
@@ -15,9 +15,18 @@ class FolderViewSet(viewsets.ModelViewSet):
     serializer_class = FolderSerializer
     authentication_classes = (authentication.TokenAuthentication, authentication.SessionAuthentication)
     permission_classes = (permissions.IsAuthenticated,)
+    filter_backends = (filters.OrderingFilter,)
+    ordering_fields = ('name', 'description', 'parent_folder', 'created_at', 'updated_at',)
 
     def get_queryset(self):
-        return Folder.objects.filter(user=self.request.user)
+        folders = Folder.objects.filter(user=self.request.user)
+        parent_folder = self.request.query_params.get('parent_folder', None)
+        if parent_folder is not None:
+            if parent_folder != '':
+                folders = folders.filter(parent_folder=parent_folder)
+            else:
+                folders = folders.filter(parent_folder=None)
+        return folders
 
 
 class FileViewSet(viewsets.ModelViewSet):
@@ -28,6 +37,8 @@ class FileViewSet(viewsets.ModelViewSet):
     authentication_classes = (authentication.TokenAuthentication, authentication.SessionAuthentication)
     permission_classes = (permissions.IsAuthenticated,)
     parser_classes = (parsers.MultiPartParser,)
+    filter_backends = (filters.OrderingFilter,)
+    ordering_fields = ('name', 'description', 'size', 'mime_type', 'folder', 'created_at', 'updated_at',)
 
     def get_queryset(self):
         files = File.objects.filter(user=self.request.user)

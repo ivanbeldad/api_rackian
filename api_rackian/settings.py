@@ -25,8 +25,6 @@ DATABASES = local_settings.DATABASES
 STORAGE_FOLDER = local_settings.STORAGE_FOLDER
 STORAGE_FOLDER_ABS = BASE_DIR + '/' + STORAGE_FOLDER
 
-AUTH_USER_MODEL = 'authentication.User'
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
@@ -49,6 +47,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework.authtoken',
+    'django_filters',
     'corsheaders',
 
     'authentication',
@@ -137,7 +136,8 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
-    )
+    ),
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
 }
 
 

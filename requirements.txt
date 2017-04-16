@@ -3,3 +3,4 @@ djangorestframework==3.6.2
 django-cors-headers==2.0.2
 wheel==0.29.0
 gunicorn==19.7.1
+django-filter==1.0.2
