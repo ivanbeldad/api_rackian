@@ -45,5 +45,5 @@ class TokenView(views.APIView):
     @staticmethod
     def calculate_expires(created):
         expiration = created
-        expiration += datetime.timedelta(hours=24)
+        expiration += datetime.timedelta(hours=720)
         return expiration

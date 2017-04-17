@@ -27,5 +27,5 @@ class TokenSerializer(serializers.Serializer):
 
     def calculate_expires(self, obj):
         expiration = obj.created
-        expiration += datetime.timedelta(hours=24)
+        expiration += datetime.timedelta(hours=720)
         return expiration
