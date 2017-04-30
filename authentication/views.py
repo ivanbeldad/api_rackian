@@ -1,13 +1,13 @@
-from rest_framework import viewsets, views, authentication, permissions
+from rest_framework import views, authentication, permissions
 from rest_framework.authtoken.models import Token
 from authentication.serializers import UserSerializer, TokenSerializer
 from rest_framework.response import Response
-from .models import User
 from django.utils import timezone
 import datetime
+from rest_framework import generics
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(generics.RetrieveAPIView):
     """
     A simple ViewSet for listing or retrieving Users.
     """
@@ -15,8 +15,12 @@ class UserViewSet(viewsets.ModelViewSet):
     authentication_classes = (authentication.TokenAuthentication, authentication.SessionAuthentication)
     permission_classes = (permissions.IsAuthenticated,)
 
-    def get_queryset(self):
-        return User.objects.all()
+    def get(self, request, *args, **kwargs):
+        """
+        Get the authenticated user information
+        """
+        serializer = UserSerializer(self.request.user)
+        return Response(serializer.data)
 
 
 class TokenView(views.APIView):

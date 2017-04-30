@@ -7,7 +7,7 @@ import datetime
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = '__all__'
+        fields = ('id', 'username', 'first_name', 'last_name', 'email', 'is_superuser', 'space', 'last_login')
 
 
 class TokenSerializer(serializers.Serializer):
