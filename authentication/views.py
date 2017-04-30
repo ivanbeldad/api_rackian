@@ -1,5 +1,6 @@
-from rest_framework import views, authentication, permissions
+from rest_framework import views, authentication, permissions, status
 from rest_framework.authtoken.models import Token
+from authentication.models import User
 from authentication.serializers import UserSerializer, TokenSerializer
 from rest_framework.response import Response
 from django.utils import timezone
@@ -14,13 +15,33 @@ class UserViewSet(generics.RetrieveAPIView):
     serializer_class = UserSerializer
     authentication_classes = (authentication.TokenAuthentication, authentication.SessionAuthentication)
     permission_classes = (permissions.IsAuthenticated,)
+    # queryset = User.objects.all()
 
     def get(self, request, *args, **kwargs):
-        """
-        Get the authenticated user information
-        """
-        serializer = UserSerializer(self.request.user)
-        return Response(serializer.data)
+        print kwargs['pk']
+        if self.request.user.id == kwargs['pk']:
+            serializer = UserSerializer(self.request.user)
+            return Response(serializer.data)
+        return Response(data={'details': 'Invalid user'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+    # def get_queryset(self):
+    #     print 'Parameter: ' + self.kwargs['pk']
+    #     print 'User id: ' + self.request.user.id
+    #     if self.request.user.id == self.kwargs['pk']:
+    #         return Response(UserSerializer(self.request.user).data)
+    #     return User.objects.all()
+
+
+    # queryset = User.objects.all()
+    #
+    # def get(self, request, *args, **kwargs):
+    #     """
+    #     Get the authenticated user information
+    #     """
+    #     serializer = UserSerializer(self.request.user)
+    #     return Response(serializer.data)
+
 
 
 class TokenView(views.APIView):
