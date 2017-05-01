@@ -140,7 +140,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 100,
+    'PAGE_SIZE': 10,
 }
 
 
@@ -154,3 +154,6 @@ CORS_ORIGIN_WHITELIST = (
     'api.rackian.com',
     'rackian.com',
 )
+
+# Allow from all. Only for development
+CORS_ORIGIN_ALLOW_ALL = True
