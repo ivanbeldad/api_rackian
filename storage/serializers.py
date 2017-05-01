@@ -1,4 +1,3 @@
-from api_rackian import settings
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 from storage.models import Folder, File
@@ -13,6 +12,8 @@ class FileFieldCustom(serializers.FileField):
 
 
 class FolderSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.CharField()
+
     class Meta:
         model = Folder
         fields = '__all__'
@@ -26,6 +27,7 @@ class FolderSerializer(serializers.HyperlinkedModelSerializer):
 
 class FileSerializer(serializers.HyperlinkedModelSerializer):
     link = FileFieldCustom()
+    id = serializers.CharField()
 
     class Meta:
         model = File
