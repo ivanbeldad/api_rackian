@@ -101,10 +101,13 @@ class DownloadableFileView(views.APIView):
             response = HttpResponse(fp.read(), content_type=file.mime_type)
             response['Content-Length'] = fp.tell()
             fp.close()
-            mime = mimetypes.guess_extension(file.mime_type)
-            if mime == '.jpe':
-                mime = '.jpg'
-            response['Content-Disposition'] = 'attachment; filename=' + file.name + mime
+            if file.extension:
+                extension = file.extension
+            else:
+                extension = mimetypes.guess_extension(file.mime_type)
+                if extension == '.jpe':
+                    extension = '.jpg'
+            response['Content-Disposition'] = 'attachment; filename=' + file.name + extension
         except:
             return Response('not exists')
         return response

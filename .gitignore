@@ -2,3 +2,4 @@
 *.swp
 local_settings.py
 media/
+api_rackian/local_settings.production.py

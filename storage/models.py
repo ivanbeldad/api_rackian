@@ -35,6 +35,7 @@ class File(TimeStampedModel):
     description = models.CharField(max_length=500, blank=True)
     size = models.BigIntegerField()
     mime_type = models.CharField(max_length=100, blank=False)
+    extension = models.CharField(max_length=20, blank=True)
     link = models.FileField(upload_to=file_path)
 
     def save(self, *args, **kwargs):
