@@ -94,8 +94,6 @@ class DownloadableFileView(views.APIView):
 
         try:
             user = self.request.user
-            complete_path = settings.STORAGE_FOLDER + '/' + id
-            print complete_path
             file = File.objects.filter(user=user, id=id).first()
             fp = open(real_path, 'rb')
             response = HttpResponse(fp.read(), content_type=file.mime_type)
@@ -107,7 +105,7 @@ class DownloadableFileView(views.APIView):
                 extension = mimetypes.guess_extension(file.mime_type)
                 if extension == '.jpe':
                     extension = '.jpg'
-            response['Content-Disposition'] = 'attachment; filename=' + file.name + extension
+            response['Content-Disposition'] = 'inline; filename=' + file.name + extension
         except:
             return Response('not exists')
         return response

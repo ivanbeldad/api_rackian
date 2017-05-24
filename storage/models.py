@@ -4,7 +4,7 @@ from authentication.models import User
 from api_rackian.models import TimeStampedModel
 import random
 import string
-from api_rackian.settings import STORAGE_FOLDER
+from api_rackian.settings import STORAGE_FOLDER_ABS
 
 
 def custom_identifier():
@@ -12,7 +12,7 @@ def custom_identifier():
 
 
 def file_path(instance, filename):
-    return "%s/%s" % (STORAGE_FOLDER, instance.id)
+    return "%s/%s" % (STORAGE_FOLDER_ABS, instance.id)
 
 
 class Folder(TimeStampedModel):
