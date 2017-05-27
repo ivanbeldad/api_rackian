@@ -7,8 +7,8 @@ import string
 from api_rackian.settings import STORAGE_FOLDER_ABS
 
 
-def custom_identifier():
-    return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(12))
+# def custom_identifier():
+#     return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(12))
 
 
 def file_path(instance, filename):
@@ -22,9 +22,9 @@ class Folder(TimeStampedModel):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=500, blank=True)
 
-    def save(self, *args, **kwargs):
-        self.id = self.user.id + '-' + custom_identifier()
-        super(Folder, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     self.id = self.user.id + '-' + custom_identifier()
+    #     super(Folder, self).save(*args, **kwargs)
 
 
 class File(TimeStampedModel):
@@ -38,6 +38,6 @@ class File(TimeStampedModel):
     extension = models.CharField(max_length=20, blank=True)
     link = models.FileField(upload_to=file_path)
 
-    def save(self, *args, **kwargs):
-        self.id = self.user.id + '-' + custom_identifier()
-        super(File, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     self.id = self.user.id + '-' + custom_identifier()
+    #     super(File, self).save(*args, **kwargs)

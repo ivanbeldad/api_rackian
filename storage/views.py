@@ -3,7 +3,7 @@ from api_rackian import settings
 from rest_framework import viewsets, views
 from rest_framework.response import Response
 from storage.models import Folder, File
-from storage.serializers import FolderSerializer, FileSerializer
+from storage.serializers import FolderSerializer, FileSerializer, FileUpdateSerializer
 from rest_framework import authentication, permissions, parsers, status, filters
 import mimetypes
 
@@ -36,7 +36,7 @@ class FileViewSet(viewsets.ModelViewSet):
     serializer_class = FileSerializer
     authentication_classes = (authentication.TokenAuthentication, authentication.SessionAuthentication)
     permission_classes = (permissions.IsAuthenticated,)
-    parser_classes = (parsers.MultiPartParser,)
+    parser_classes = (parsers.MultiPartParser, parsers.JSONParser,)
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = ('name', 'description', 'size', 'mime_type', 'folder', 'created_at', 'updated_at',)
 
@@ -49,6 +49,14 @@ class FileViewSet(viewsets.ModelViewSet):
             else:
                 files = files.filter(folder=None)
         return files
+
+    def get_serializer_class(self):
+        serializer_class = self.serializer_class
+
+        if self.request.method == 'PUT' or self.request.method == 'PATCH':
+            serializer_class = FileUpdateSerializer
+
+        return serializer_class
 
     @staticmethod
     def max_space(request):
