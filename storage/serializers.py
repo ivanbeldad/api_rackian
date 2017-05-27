@@ -56,8 +56,11 @@ class FileSerializer(serializers.HyperlinkedModelSerializer):
         except Exception:
             validated_data['extension'] = ''
         validated_data['size'] = validated_data['link'].size
-        if not validated_data['mime_type']:
-            validated_data['mime_type'] = mimetypes.guess_type(validated_data['link'].name)[0]
+        try:
+            if not validated_data['mime_type']:
+                validated_data['mime_type'] = mimetypes.guess_type(validated_data['link'].name)[0]
+        except KeyError:
+            validated_data['mime_type'] = 'unknown'
         return File.objects.create(**validated_data)
 
 
