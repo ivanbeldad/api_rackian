@@ -9,5 +9,5 @@ urlpatterns = router.urls
 
 urlpatterns += [
     url(r'^download/(?P<id>[a-zA-Z0-9\-_]*)/',
-        views.DownloadableFileView.as_view(), name='download'),
+        views.DownloadableResourceView.as_view(), name='download'),
 ]

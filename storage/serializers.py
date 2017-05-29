@@ -22,6 +22,7 @@ class FileFieldCustom(serializers.FileField):
 
 class FolderSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.CharField(help_text='', read_only=True)
+    link = serializers.SerializerMethodField('download_link', help_text='Zip downloadable', read_only=True)
 
     class Meta:
         model = Folder
@@ -33,6 +34,12 @@ class FolderSerializer(serializers.HyperlinkedModelSerializer):
         validated_data['id'] = user.id + '-' + custom_identifier()
         validated_data['user'] = user
         return Folder.objects.create(**validated_data)
+
+    def download_link(self, folder):
+        request = self.context['request']
+        absolute_url = request.build_absolute_uri().replace(request.path, '')
+        downloadable_url = ''.join((absolute_url, '/v1/download/', folder.id, '/'))
+        return downloadable_url
 
 
 class FileSerializer(serializers.HyperlinkedModelSerializer):
