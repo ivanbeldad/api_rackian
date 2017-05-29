@@ -1,6 +1,7 @@
-from rest_framework import routers
+from django.conf.urls import url
 from authentication import views
 
-router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet, base_name='user')
-urlpatterns = router.urls
+urlpatterns = [
+    url(r'^token/$', views.TokenView.as_view(), name='token'),
+    url(r'^user/(?P<pk>[a-zA-Z0-9]{12})$', views.UserViewSet.as_view(), name='user-detail'),
+]

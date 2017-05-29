@@ -14,13 +14,16 @@ import os
 import local_settings
 
 
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
 # Private configurations from local_settings
 
 SECRET_KEY = local_settings.SECRET_KEY
 DATABASES = local_settings.DATABASES
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+STORAGE_FOLDER = local_settings.STORAGE_FOLDER
+STORAGE_FOLDER_ABS = BASE_DIR + '/' + STORAGE_FOLDER
 
 
 # Quick-start development settings - unsuitable for production
@@ -44,10 +47,18 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework.authtoken',
+    'django_filters',
     'corsheaders',
 
     'authentication',
+    'storage',
+    'share',
 ]
+
+
+# Custom User Model
+AUTH_USER_MODEL = 'authentication.User'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -126,7 +137,10 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
-    )
+    ),
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 10,
 }
 
 
@@ -140,3 +154,6 @@ CORS_ORIGIN_WHITELIST = (
     'api.rackian.com',
     'rackian.com',
 )
+
+# Allow from all. Only for development
+CORS_ORIGIN_ALLOW_ALL = True

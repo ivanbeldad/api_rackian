@@ -2,9 +2,9 @@
 import os
 import sys
 
-# REMOVE ON DEPLOYMENT
-import pymysql
-pymysql.install_as_MySQLdb()
+if sys.platform == "win32":
+    import pymysql
+    pymysql.install_as_MySQLdb()
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "api_rackian.settings")
