@@ -8,6 +8,5 @@ router.register(r'files', views.FileViewSet, base_name='file')
 urlpatterns = router.urls
 
 urlpatterns += [
-    url(r'^download/(?P<id>[a-zA-Z0-9\-_]*)/',
-        views.DownloadableResourceView.as_view(), name='download'),
+    url(r'^download/(?P<id>[a-zA-Z0-9\-_]*)/', views.DownloadableResourceView.as_view(), name='download'),
 ]

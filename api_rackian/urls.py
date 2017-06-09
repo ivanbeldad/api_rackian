@@ -21,5 +21,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^v1/', include('authentication.urls')),
     url(r'^v1/', include('storage.urls')),
+    url(r'^v1/', include('share.urls')),
     url(r'^docs/', include_docs_urls(title='Rackian API')),
 ]
