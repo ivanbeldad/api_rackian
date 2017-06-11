@@ -1,13 +1,10 @@
 import os
 import random
 import shutil
-from zipfile import ZipFile
-
 from django.http import HttpResponse
 from rest_framework import authentication, permissions, parsers, status, filters
 from rest_framework import viewsets, views
 from rest_framework.response import Response
-
 from api_rackian.settings import STORAGE_FOLDER_ABS
 from storage.models import Folder, File
 from storage.serializers import FolderSerializer, FileSerializer, FileUpdateSerializer
@@ -96,37 +93,6 @@ class FileViewSet(viewsets.ModelViewSet):
         return super(FileViewSet, self).destroy(request, *args, **kwargs)
 
 
-# class DownloadableResourceView(views.APIView):
-#     """
-#     A View for download Files.
-#     """
-#     authentication_classes = (authentication.TokenAuthentication, authentication.SessionAuthentication)
-#
-#     def get(self, request, id):
-#         """
-#         Download file or folder.
-#         """
-#         real_path = settings.STORAGE_FOLDER_ABS + '/' + id
-#
-#         try:
-#             user = self.request.user
-#             file = File.objects.filter(user=user, id=id).first()
-#             fp = open(real_path, 'rb')
-#             response = HttpResponse(fp.read(), content_type=file.mime_type)
-#             response['Content-Length'] = fp.tell()
-#             fp.close()
-#             if file.extension:
-#                 extension = file.extension
-#             else:
-#                 extension = mimetypes.guess_extension(file.mime_type)
-#                 if extension == '.jpe':
-#                     extension = '.jpg'
-#             response['Content-Disposition'] = 'inline; filename=' + file.name + extension
-#         except:
-#             return Response('not exists')
-#         return response
-
-
 class DownloadableResourceView(views.APIView):
     """
     A View for download Files.
@@ -148,8 +114,8 @@ class DownloadableResourceView(views.APIView):
             folder = Folder.objects.filter(user=user, id=id).first()
             return DownloadableResourceView.download_folder(folder)
         except:
-            raise
-        return Response('not exists')
+            pass
+        return Response('not exists', 404)
 
 
     @staticmethod

@@ -5,17 +5,20 @@ from storage.models import File, Folder
 
 
 class Permission(TimeStampedModel):
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=500)
 
 
 class FileLink(TimeStampedModel):
-    file = models.ForeignKey(File, on_delete=models.CASCADE)
-    shared_permission = models.ForeignKey(Permission)
+    id = models.CharField(primary_key=True, max_length=25)
+    file = models.OneToOneField(File, on_delete=models.CASCADE)
+    permission = models.ForeignKey(Permission, default=1)
     link = models.CharField(max_length=500)
 
 
 class FolderLink(TimeStampedModel):
-    folder = models.ForeignKey(Folder, on_delete=models.CASCADE)
-    shared_permission = models.ForeignKey(Permission)
+    id = models.CharField(primary_key=True, max_length=25)
+    folder = models.OneToOneField(Folder, on_delete=models.CASCADE)
+    permission = models.ForeignKey(Permission, default=1)
     link = models.CharField(max_length=500)
