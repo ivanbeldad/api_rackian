@@ -13,30 +13,6 @@ from storage.models import File
 from . import serializers, models
 
 
-# class CustomPermission(permissions.BasePermission):
-#
-#     def has_permission(self, request, view):
-#         if view.action == 'list':
-#             print 'bad'
-#             return request.user.is_authenticated() and request.user.is_admin
-#         elif view.action == 'create':
-#             return True
-#         elif view.action in ['retrieve', 'update', 'partial_update', 'destroy']:
-#             return True
-#         else:
-#             return False
-#
-#     def has_object_permission(self, request, view, obj):
-#         if view.action == 'retrieve':
-#             return request.user.is_authenticated() and (obj == request.user or request.user.is_admin)
-#         elif view.action in ['update', 'partial_update']:
-#             return request.user.is_authenticated() and (obj == request.user or request.user.is_admin)
-#         elif view.action == 'destroy':
-#             return request.user.is_authenticated() and request.user.is_admin
-#         else:
-#             return False
-
-
 class PermissionViewset(mixins.RetrieveModelMixin,
                         mixins.ListModelMixin,
                         viewsets.GenericViewSet):
@@ -52,7 +28,14 @@ class FileLinkViewset(viewsets.ModelViewSet):
     serializer_class = serializers.FileLinkSerializer
     authentication_classes = (authentication.TokenAuthentication, authentication.SessionAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
-    queryset = models.FileLink.objects.all()
+
+    def get_queryset(self):
+        file_links = models.FileLink.objects.all()
+        file_filter = self.request.query_params.get('file', None)
+        if file_filter is not None:
+            if file_filter != '':
+                file_links = file_links.filter(file=file_filter)
+        return file_links
 
 
 class FolderLinkViewset(viewsets.ModelViewSet):
@@ -86,6 +69,15 @@ class ShareFileView(views.APIView):
         fp = open(file_location, 'rb')
         response = HttpResponse(fp.read(), content_type=file.mime_type)
         response['Content-Length'] = fp.tell()
+
+        # ALLOW SEE FILENAME
+        response['filename'] = file.name + file.extension
+        response['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
+        response['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Custom-header'
+        response['Access-Control-Expose-Headers'] = 'filename'
+
+
+
         fp.close()
         response['Content-Disposition'] = 'inline; filename=' + file.name + file.extension
         return response
@@ -103,8 +95,6 @@ class ShareFolderView(views.APIView):
         """
         try:
             folderlink = models.FolderLink.objects.filter(id=id).first()
-            print folderlink.folder.id
-            print folderlink.folder.name
             return ShareFolderView.download_folder(folderlink.folder)
         except:
             return Response('not exists', 404)
@@ -112,9 +102,7 @@ class ShareFolderView(views.APIView):
     @staticmethod
     def download_folder(folder):
         tmp_folder = ''.join(('./tmp-', folder.id, '-', str(random.randint(1000, 9999))))
-        print tmp_folder
         root_folder = ''.join((tmp_folder, '/', folder.name))
-        print root_folder
         os.mkdir(tmp_folder)
         try:
             ShareFolderView.generate_folder(tmp_folder, folder)

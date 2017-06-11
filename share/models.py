@@ -12,13 +12,13 @@ class Permission(TimeStampedModel):
 
 class FileLink(TimeStampedModel):
     id = models.CharField(primary_key=True, max_length=25)
-    file = models.ForeignKey(File, on_delete=models.CASCADE)
-    permission = models.ForeignKey(Permission)
+    file = models.OneToOneField(File, on_delete=models.CASCADE)
+    permission = models.ForeignKey(Permission, default=1)
     link = models.CharField(max_length=500)
 
 
 class FolderLink(TimeStampedModel):
     id = models.CharField(primary_key=True, max_length=25)
-    folder = models.ForeignKey(Folder, on_delete=models.CASCADE)
-    permission = models.ForeignKey(Permission)
+    folder = models.OneToOneField(Folder, on_delete=models.CASCADE)
+    permission = models.ForeignKey(Permission, default=1)
     link = models.CharField(max_length=500)
