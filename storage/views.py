@@ -90,6 +90,8 @@ class FileViewSet(viewsets.ModelViewSet):
         if user.space < 0:
             user.space = 0
         user.save()
+        file_location = self.get_object().link.name
+        os.remove(file_location)
         return super(FileViewSet, self).destroy(request, *args, **kwargs)
 
 

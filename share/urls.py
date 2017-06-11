@@ -14,5 +14,4 @@ urlpatterns = router.urls
 urlpatterns += [
     url(r'^share/file/(?P<id>[a-zA-Z0-9\-_]*)/', views.ShareFileView.as_view(), name='share-file'),
     url(r'^share/folder/(?P<id>[a-zA-Z0-9\-_]*)/', views.ShareFolderView.as_view(), name='share-folder'),
-    # url(r'^share-folders/', views.FolderLinkViewset.as_view({'get': 'list'}), name='share-folder'),
 ]
