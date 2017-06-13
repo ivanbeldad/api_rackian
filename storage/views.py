@@ -85,13 +85,13 @@ class FileViewSet(viewsets.ModelViewSet):
         return super(FileViewSet, self).create(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
-        user = self.request.user
-        user.space = user.space - self.get_object().size
-        if user.space < 0:
-            user.space = 0
-        user.save()
-        file_location = self.get_object().link.name
-        os.remove(file_location)
+        # user = self.request.user
+        # user.space = user.space - self.get_object().size
+        # if user.space < 0:
+        #     user.space = 0
+        # user.save()
+        # file_location = self.get_object().link.name
+        # os.remove(file_location)
         return super(FileViewSet, self).destroy(request, *args, **kwargs)
 
 
@@ -118,6 +118,18 @@ class DownloadableResourceView(views.APIView):
         except:
             pass
         return Response('not exists', 404)
+
+    # @staticmethod
+    # def folder_space(folder, space):
+    #     files = File.objects.filter(folder=folder)
+    #     for current_file in files:
+    #         space += current_file.size
+    #     sub_folders = Folder.objects.filter(parent_folder=folder)
+    #     if sub_folders.length > 0:
+    #         for sub_folder in sub_folders:
+    #             return DownloadableResourceView.folder_space(sub_folder, space)
+    #     else:
+    #         return space
 
 
     @staticmethod
